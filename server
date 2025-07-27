@@ -16,11 +16,12 @@
 # To see if you have screen installed use: "screen --version"
 # To install screen with apt use: "sudo apt install screen"
 #
-# Also note that the update is not functional at this time. I will code that in the
+# Also note that "update" is not functional at this time. I will code that in the
 # near future and commit it when I have time. This will likely be in the format of
 # entering/selecting the new MCServer.JAR and selecting where to place it, fully
 # automating the server update, as well as updating the MC service, SBU (server backup utility),
-# and whatever else will need to be addressed.
+# and whatever else will need to be addressed. If people ask for it, I will include updating
+# the ip address and port selection too. Let me know if you want that!
 # -------------------------------------------------------------------------------/*
 clear
 
