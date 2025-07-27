@@ -24,8 +24,6 @@
 # the ip address and port selection too. Let me know if you want that!
 # -------------------------------------------------------------------------------/*
 clear
-
-clear
 sleep 1
 
 # Global variables and exit codes
