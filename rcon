@@ -1,0 +1,10 @@
+# You will need to have the mcrcon package installed to run this!
+# mcrcon is console based Minecraft [rcon](https://developer.valvesoftware.com/wiki/Source_RCON_Protocol) client for remote administration and server # maintenance scripts.
+# Installing:
+# via packet manager:
+#  - See https://pkgs.org/download/mcrcon for available packages in various Linux distros (note that available packages might be outdated).
+# Gentoo Linux: https://packages.gentoo.org/packages/games-util/mcrcon
+# Arch Linux: https://aur.archlinux.org/packages/mcrcon/
+# Rcon default port is 25575. This can be changed. Keep in mind for your ip tables configuration!
+
+mcrcon -H your.mcserver.ip.address -P 25575 -p "YourStrongPasswordHere"

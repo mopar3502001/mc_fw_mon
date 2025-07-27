@@ -1,0 +1,266 @@
+#! /bin/bash
+# Minecraft Java Server Control Script v1.3 by mopar3502001
+# Last modified on 4/14/2025 for Minecraft Java 1.21.4, Paper Server Version 1.21.4-222-main@9b1798d (2025-03-27T13:35:40Z)
+#
+# This script assumes: You are using a paperMC server with bukkit. The server version makes no difference here, but will in the
+# service depending on your file naming convention. Although the script will run without paperMC and bukkit!
+#
+
+# /*-------------------------------------------------------------------------------
+# Note that option 1 no longer functions due to the script now using Rcon!
+# It will simply fail because it will not find a previous instance of GNU screen.
+# This script can be configured to use the screen as the local console if desired.
+# To see if you have screen installed use: "screen --version"
+# To install screen with apt use: "sudo apt install screen"
+# -------------------------------------------------------------------------------/*
+clear
+sleep 1
+
+# Global variables and exit codes
+MenuText1="Minecraft Java Server Control Script v1.3"
+MenuText2=$'Please make sure all players are disconnected from the server\nbefore making any configuration changes or shutting it down.'
+MenuText3=$'Make your selection from the menu options below.
+
+1: Connect to the Minecraft Java Server Console
+2: Get the status of the Minecraft Java Server
+3: Start the Minecraft Java Server
+4: Stop the Minecraft Java Server
+5: Edit the Bukkit configuration file
+6: Edit the Server Properties file
+7: Run the SBU (Server Backup Utility)
+8: Clear and refresh the screen
+9: Exit
+
+L: View Minecraft Server Full Log (Past + Live)
+
+to apply any changes made to the configuration files,
+type "apply changes" and press [ENTER].
+
+to update the server to a newer version,
+type "update" and press [ENTER].'
+LOGFILE="./minecraft_server_control.log"
+
+# Logging function
+log_action() {
+    local message="$1"
+    printf "%s - User: %s - %s\n" "$(date '+%Y-%m-%d %H:%M:%S')" "${USER}" "$message" >> "$LOGFILE"
+}
+
+# RCON launch function
+rcon() {
+    if screen -list | grep -q '\.rcon'; then
+        screen -r rcon
+    else
+        echo -e "\033[0;33mRCON screen not found. Starting a new one...\033[0m"
+        screen -dmS rcon /usr/local/bin/mcrcon -H 127.0.0.1 -P 25575 -p yourStrongPassword
+        sleep 1
+        screen -r rcon
+    fi
+}
+
+# Confirmation functions
+function Stop_Minecraft_Server {
+    while true; do
+        read -t 30 -p "$* [y/n]: " yn
+        case $yn in
+            [Yy]*) return 0 ;;
+            ""|[Nn]*)
+                printf "\n\nNo input or %s doesn't want to shut down the Minecraft Server.\n" "$USER"
+                log_action "User declined to stop the server."
+                return 1 ;;
+            *) printf "Invalid input, please answer y or n.\n" ;;
+        esac
+    done
+}
+
+function Start_Minecraft_Server {
+    while true; do
+        read -t 30 -p "$* [y/n]: " yn
+        case $yn in
+            [Yy]*) return 0 ;;
+            ""|[Nn]*)
+                printf "\nNo input or %s does not want to start the Minecraft Server.\n" "$USER"
+                log_action "User declined to start the server."
+                return 1 ;;
+            *) printf "Invalid input, please answer y or n.\n" ;;
+        esac
+    done
+}
+
+# Menu handling
+function Menu_Select {
+    while true; do
+        echo -e "$MenuText3"
+        echo
+        read -p "Menu selection: " MenuItem
+
+        if [ "$MenuItem" = "apply changes" ]; then
+            printf "\033[1;36mAttempting Minecraft Java Server restart.\033[0m\n"
+            printf "\033[1;36mChecking to see if the server is running...\033[0m\n"
+            if systemctl is-active --quiet minecraft; then
+                printf "\033[1;36mThe Minecraft Java Server is RUNNING. Beginning shutdown...\033[0m\n"
+                log_action "Initiating server restart: stopping server."
+                sudo systemctl stop minecraft
+                if systemctl is-active --quiet minecraft; then
+                    printf "\033[0;91mThe Minecraft Java Server is still RUNNING.\033[0m\n\n"
+                    log_action "Server restart attempt failed: server still running after stop command."
+                else
+                    printf "\033[0;91mWARNING: \033[0;32mThe Minecraft Java Server has been shut down.\033[0m\n"
+                    sleep 3
+                    printf "\033[1;36mRestarting the Minecraft Java Server...\033[0m\n"
+                    log_action "Server stop successful; restarting server."
+                    sudo systemctl start minecraft
+                    if systemctl is-active --quiet minecraft; then
+                        printf "\033[0;32mThe Minecraft Java Server was successfully restarted.\033[0m"
+                        log_action "Server restarted successfully."
+                        return 1
+                    else
+                        printf "\033[0;91mThe Minecraft Java Server is NOT running.\nAborting server restart!\033[0m\n\n"
+                        log_action "Server restart failed: server not running after start command."
+                    fi
+                fi
+            else
+                printf "\033[1;36mThe Minecraft Java Server isn't running. Attempting to start it...\033[0m\n"
+                log_action "Server not running; attempting to start."
+                sudo systemctl start minecraft
+                if systemctl is-active --quiet minecraft; then
+                    printf "\033[0;32mThe Minecraft Java Server was successfully restarted.\033[0m\n\n"
+                    log_action "Server started successfully."
+                else
+                    printf "\033[0;91mThe Minecraft Java Server is NOT running.\nAborting server restart!\033[0m\n\n"
+                    log_action "Server start attempt failed."
+                fi
+            fi
+            return 1
+        fi
+
+        if [ "$MenuItem" = "update" ]; then
+            printf "This will update the Minecraft Java Server"
+            log_action "Update command selected (placeholder for future functionality)."
+            return 1
+        fi
+
+        case $MenuItem in
+            1)
+                printf "\033[1;36mAttempting to connect to the server console...\033[0m"
+                log_action "Connecting to server console."
+                rcon
+                return 1
+                ;;
+            2)
+                printf "\033[1;36mGetting Minecraft Java Server status...\033[0m"
+                if systemctl is-active --quiet minecraft; then
+                    printf "\n\033[0;32mThe Minecraft Java Server is RUNNING.\033[0m"
+                    log_action "Status check: Server is running."
+                else
+                    printf "\n\033[0;91mThe Minecraft Java Server is NOT running.\033[0m"
+                    log_action "Status check: Server is not running."
+                fi
+                return 1
+                ;;
+            3)
+                printf "\033[1;36mAttempting to start the server...\033[0m"
+                if systemctl is-active --quiet minecraft; then
+                    printf "\n\033[0;32mThe Minecraft Java Server is ALREADY running.\033[0m"
+                    log_action "Server startup attempt aborted: Server already running."
+                    return 1
+                fi
+                sudo systemctl start minecraft
+                if systemctl is-active --quiet minecraft; then
+                    printf "\n\033[0;32mThe Minecraft Java Server successfully STARTED.\033[0m"
+                    log_action "Server started successfully."
+                else
+                    printf "\n\033[0;91mThe Minecraft Java Server was NOT started!\033[0m"
+                    log_action "Server start failed."
+                fi
+                return 1
+                ;;
+            4)
+                printf "\033[1;36mAttempting to shut down the Minecraft Java Server...\033[0m\n"
+                if ! systemctl is-active --quiet minecraft; then
+                    printf "\033[0;91mThe Minecraft Java Server is already stopped.\033[0m\n"
+                    log_action "Stop attempt aborted: Server already stopped."
+                    return 1
+                fi
+                sudo systemctl stop minecraft
+                if systemctl is-active --quiet minecraft; then
+                    printf "\033[0;91mServer stop FAILED! The Minecraft Java Server is still RUNNING.\033[0m\n"
+                    log_action "Server stop failed: server still running."
+                else
+                    printf "\033[0;91mWARNING: \033[0;32mThe Minecraft Java Server has been shut down.\033[0m\n"
+                    log_action "Server stopped successfully."
+                fi
+                return 1
+                ;;
+            5)
+                printf "\033[1;36mEditing the Bukkit configuration file...\033[0m"
+                nano /MinecraftServer/MinecraftServers/Current/bukkit.yml
+                log_action "Edited Bukkit configuration file."
+                return 1
+                ;;
+            6)
+                printf "\033[1;36mEditing the server properties file...\033[0m\n"
+                nano /MinecraftServer/MinecraftServers/Current/server.properties
+                log_action "Edited server properties file."
+                return 1
+                ;;
+            7)
+                printf "\033[1;36mLaunching the backup utility...\033[0m\n"
+                log_action "Backup utility launched."
+                bash ./backup
+                return 1
+                ;;
+            8)
+                clear
+                sleep 1
+                printf "\033[0;91m%s\n" "$MenuText1"
+                printf "\n\033[0;33m * * User is authenticated as \033[0;97m%s\033[0;33m * *\033[0m\n" "$USER"
+                log_action "Screen cleared and display refreshed."
+                return 1
+                ;;
+            9)
+                printf "\033[1;36mExiting Minecraft Java Server Control Script...\033[0m\n"
+                log_action "User exited the control script."
+                return 0
+                ;;
+            L|l)
+                printf "\033[1;36mDisplaying full Minecraft server logs...\033[0m\n"
+                log_action "User requested full log view."
+                less /MinecraftServer/MinecraftServers/Current/logs/latest.log
+                return 1
+                ;;
+            *)
+                printf "\033[0;91mInvalid selection. Please try again.\033[0m\n"
+                log_action "Received unknown menu selection: $MenuItem"
+                ;;
+        esac
+    done
+}
+
+# Privilege check
+if [ "$EUID" = 0 ]; then
+    printf "\033[0;91m%s\n" "$MenuText1"
+    printf "\n\033[0;33m * * User is authenticated as \033[0;97m%s\033[0;33m * *\033[0m\n" "$USER"
+    printf "\n\033[0;91m\033[0;33mNOTE: \033[0;91mRunning this script as \033[0;97mroot\033[0;91m may prevent you from connecting to\n      the Minecraft Java Server console!\033[0m"
+    log_action "Script run as root."
+else
+    printf "\033[0;91m%s\n" "$MenuText1"
+    printf "\033[1;36m * - Authentication may be required - *\033[0m"
+    log_action "Script run as non-root user."
+fi
+
+# Main Menu loop
+Main_Menu() {
+    echo -e "\n\n\033[0;33m$MenuText2\033[0m\n"
+    Menu_Select
+}
+
+while true; do
+    Main_Menu
+    res=$?
+    if (( res == 0 )); then
+        printf "\033[0;32mMinecraft Java Server Control Script exited normally.\033[0m\n"
+        break
+    fi
+    sleep 1
+done

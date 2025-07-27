@@ -1,0 +1,147 @@
+#!/bin/bash
+# If you use IPv6 on your network, apply these rules to your IPv6 configuration diligently!
+# ANSI color codes
+
+RED="\033[1;31m"
+YELLOW="\033[1;33m"
+CYAN="\033[1;36m"
+WHITE="\033[1;37m"
+RESET="\033[0m"
+
+LOGFILE="/var/log/fwlog.log"  # Single log file
+
+TODAY_PATTERN=$(date '+%Y-%m-%d')  # e.g., "2025-07-27"
+MONTH_PATTERN=$(date '+%Y-%m')     # e.g., "2025-07"
+
+# YOU NEED TO ENTER THE FIRST PART OF YOUR MAC ADDX WHERE THE ???? IS! JUST THE FIRST 4 CHRS (EX. "6ABF:")
+LOCAL_EXCLUDE='SRC=(192.168.|10.10.10.|127.|????:|::1|0.0.0.0|::)'  # Regex to exclude locals, IPv6, and invalid/unspecified
+
+# Function to print top 3 IPs (filtered by pattern, exclude locals) - supports IPv4 and IPv6 (IPV6 WAS DISABLED ON THE TEST SERVER!)
+print_top_ips() {
+PATTERN="$1"
+TIMEFRAME="$2"
+PORT_FILTER="$3"  # Optional: additional grep for DPT= if provided
+
+echo -e "${WHITE}Top 3 Offending IPs (${TIMEFRAME}${PORT_FILTER:+ on port $PORT_FILTER}):${RESET}"
+
+if [ -f "$LOGFILE" ]; then
+TOP_IPS=$(
+grep "$PATTERN" "$LOGFILE" |
+grep -vE "$LOCAL_EXCLUDE" |
+{ if [ -n "$PORT_FILTER" ]; then grep "DPT=$PORT_FILTER"; else cat; fi; } |
+grep -oE 'SRC=[0-9a-fA-F.:]+' | cut -d= -f2 |sort |uniq -c |sort -nr |head -n 3 |awk '{printf " %s%s%s (%s)\n", "'"${CYAN}"'", $2, "'"${RESET}"'", 1}'
+)
+
+if [ -n "$TOP_IPS" ]; then
+echo "$TOP_IPS"
+else
+echo -e "${YELLOW} No offenders detected.${RESET}"
+fi
+else
+echo -e "${YELLOW} No log data found.${RESET}"
+fi
+}
+
+# Function to print last intrusion with formatted timestamp (last non-local)
+print_last_intrusion() {
+PATTERN="$1"
+LABEL="$2"
+PORT_FILTER="$3"  # Optional: for port-specific last intrusion
+
+echo -e "${WHITE}Last Intrusion Attempt (${LABEL}${PORT_FILTER:+ on port $PORT_FILTER}):${RESET}"
+
+LAST_LINE=$(
+grep "$PATTERN" "$LOGFILE" |
+grep -vE "$LOCAL_EXCLUDE" |
+{ if [ -n "$PORT_FILTER" ]; then grep "DPT=$PORT_FILTER"; else cat; fi; } |
+tail -n 1
+)
+
+if [ -n "$LAST_LINE" ]; then
+
+# Extract ISO date and time (e.g., "2025-07-27T09:29:53")
+RAW_DATE_TIME=$(echo "$LAST_LINE" | awk '{print $1}' | cut -d. -f1)  # "2025-07-27T09:29:53"
+
+# Convert full date to MM/DD/YYYY HH:MM:SS
+FULL_DT=$(echo "$RAW_DATE_TIME" | sed 's/T/ /')
+FORMATTED_TS=$(date -d "$FULL_DT" '+%m/%d/%Y %H:%M:%S' 2>/dev/null || echo "$FULL_DT")
+
+# Parse type (e.g., EXTDROP)
+LAST_TYPE=$(echo "$LAST_LINE" | awk -F 'kernel: ' '{print $2}' | awk '{print $1}' | sed 's/:$//')
+
+# Clean message: Remove up to "kernel: " prefix and DROP prefix
+CLEAN_LINE=$(echo "$LAST_LINE" | sed 's/^.*kernel: //; s/^[A-Z]*DROP: //')
+
+# Parse IP from SRC=
+LAST_IP=$(echo "$CLEAN_LINE" | awk -F 'SRC=' '{print $2}' | awk '{print $1}')
+
+echo -e "${CYAN} $LAST_TYPE: $FORMATTED_TS from $LAST_IP${RESET}"
+else
+echo -e "${YELLOW} None recorded${RESET}"
+fi
+}
+
+# ==== DAILY SUMMARY ====
+echo -e "${WHITE}==== Firewall Drop Summary (Today) ====${RESET}"
+if [ -f "$LOGFILE" ]; then
+EXT_COUNT=$(grep "$TODAY_PATTERN" "$LOGFILE" | grep -vE "$LOCAL_EXCLUDE" | grep -c "EXTDROP")
+INT_COUNT=$(grep "$TODAY_PATTERN" "$LOGFILE" | grep -vE "$LOCAL_EXCLUDE" | grep -c "INTDROP")
+TOTAL_COUNT=$((EXT_COUNT + INT_COUNT))
+
+echo -e "Total dropped connection attempts today: ${CYAN}$TOTAL_COUNT${RESET}"
+echo -e " - EXTDROP: ${RED}$EXT_COUNT${RESET}"
+echo -e " - INTDROP: ${YELLOW}$INT_COUNT${RESET}"
+print_top_ips "$TODAY_PATTERN" "Today"
+print_last_intrusion "$TODAY_PATTERN" "Today"
+else
+echo -e "${YELLOW}No firewall log found.${RESET}"
+fi
+echo -e "${WHITE}========================================${RESET}"
+echo -e
+# ==== MONTHLY SUMMARY ====
+echo -e "${WHITE}==== Firewall Drop Summary (Monthly) ====${RESET}"
+if [ -f "$LOGFILE" ]; then
+EXT_MONTH=$(grep "$MONTH_PATTERN" "$LOGFILE" | grep -vE "$LOCAL_EXCLUDE" | grep -c "EXTDROP")
+INT_MONTH=$(grep "$MONTH_PATTERN" "$LOGFILE" | grep -vE "$LOCAL_EXCLUDE" | grep -c "INTDROP")
+TOTAL_MONTH=$((EXT_MONTH + INT_MONTH))
+
+echo -e "Total dropped connection attempts this month: ${CYAN}$TOTAL_MONTH${RESET}"
+echo -e " - EXTDROP: ${RED}$EXT_MONTH${RESET}"
+echo -e " - INTDROP: ${YELLOW}$INT_MONTH${RESET}"
+print_top_ips "$MONTH_PATTERN" "Monthly"
+print_last_intrusion "$MONTH_PATTERN" "Monthly"
+else
+echo -e "${YELLOW}No firewall log found.${RESET}"
+fi
+echo -e "${WHITE}==========================================${RESET}"
+echo -e
+
+# PORT 25565 IS THE DEFAULT PORT! NEEDS TO BE WHAT YOU HAVE YOUR MC SERVER PORT SET TO!
+# ==== PORT 25565 SUMMARY (Daily) ====
+echo -e "${WHITE}==== Port <CUSTOM PORT> Drops (Today) ====${RESET}"
+if [ -f "$LOGFILE" ]; then
+PORT_COUNT=$(grep "$TODAY_PATTERN" "$LOGFILE" | grep -vE "$LOCAL_EXCLUDE" | grep "EXTDROP" | grep -c "DPT=25565")
+
+echo -e "Dropped attempts on port 25565 today: ${CYAN}$PORT_COUNT${RESET}"
+print_top_ips "$TODAY_PATTERN" "Today" "25565"
+print_last_intrusion "$TODAY_PATTERN" "Today" "25565"
+else
+echo -e "${YELLOW}No firewall log found.${RESET}"
+fi
+echo -e "${WHITE}========================================${RESET}"
+echo -e
+
+# ==== PORT 25565 SUMMARY (Monthly) ====
+echo -e "${WHITE}==== Port 25565 Drops (Monthly) ====${RESET}"
+if [ -f "$LOGFILE" ]; then
+PORT_MONTH=$(grep "$MONTH_PATTERN" "$LOGFILE" | grep -vE "$LOCAL_EXCLUDE" | grep "EXTDROP" | grep -c "DPT=25565")
+
+echo -e "Dropped attempts on port 25565 this month: ${CYAN}$PORT_MONTH${RESET}"
+print_top_ips "$MONTH_PATTERN" "Monthly" "25565"
+print_last_intrusion "$MONTH_PATTERN" "Monthly" "25565"
+else
+echo -e "${YELLOW}No firewall log found.${RESET}"
+fi
+echo -e "${WHITE}==========================================${RESET}"
+
+echo -e "\n"

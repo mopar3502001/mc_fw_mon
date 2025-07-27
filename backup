@@ -1,0 +1,114 @@
+#! /bin/bash
+# This Minecraft Java Server backup and control script was written by mopar3502001 on 4/12/2025
+# A date and time stamp is automatically added at the end of the backup name to prevent over-writing of previous backups.
+# Delete it if you don't want it!
+# Since all of my server backups are stored on a different host on my subnet, this script was written for that. I have disabled the network
+# file storage code below. Uncomment and make the necessary changes to enable and configure it for your network / system configs.
+
+clear
+sleep 1
+if [ "$EUID" = 0 ]; then
+    echo "$USER is already authenticated."
+else
+    sudo -k
+    if sudo true; then
+        echo "Excuse me while I whip dis out..."
+    else
+        echo -e "\nAuthentication failure!"
+        echo -e "Apparently, $USER has given up!\n"
+        exit 1
+    fi
+fi
+function Terminate_Minecraft_Server {
+    while true; do
+        read -t 30 -p "$* [y/n]: " yn
+        case $yn in
+            [Yy]*) return 0  ;;
+           ""|[Nn]*) echo -e "\n\nNo user input or $USER doesn't want to shut down the Minecraft Server!\nBacking up the server while it is running is not a good idea.\nWe are done here.\n" ; exit 0 ;;
+        esac
+    done
+}
+echo -e "\nChecking to see if we need to shut down the Minecraft Server..."
+if systemctl is-active --quiet minecraft; then
+    echo "The Minecraft Server is RUNNING!"
+    Terminate_Minecraft_Server "Do you want to shut it down?" && sudo service minecraft stop
+    if systemctl is-active --quiet minecraft; then
+        echo "Unable to shut down the Minecraft Server. Aborting!!"
+        exit 1
+    else
+        echo "The Minecraft Server was successfully shut down."
+    fi
+else
+    echo "The Minecraft Server is not running."
+fi
+#                                                    NETWORK STORAGE OF BACKUP
+# ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+# This block of code is for storing the backup on another host on the network
+# echo -e "\nChecking the status of the remote file system. One moment please..."
+# if mount | grep /your/local/mount/point > /dev/null; then
+#    echo "The remote file system is currently MOUNTED!"
+#    echo "Unmounting remote file system..."
+#    sudo umount /your/local/mount/point/
+#    if mount | grep /your/local/mount/point > /dev/null; then
+#        echo "Unable to unmount remote file system! Aborting!!"
+#        exit 1
+#    fi
+# else
+#     echo "The remote file system was NOT mounted."
+# fi
+# IT IS RECOMMENDED TO CREATE A CREDENTIALS FILE AND USE IT VS CODING USERNAME AND PWD IN THIS FILE!!!!!!!
+# THIS CAN BE DANGEROUS!! DO YOUR DILIGENCE!!
+# echo -e "\nAttempting to mount the remote file system with read/write access. One moment please..."
+# sudo mount -t cifs "/your/network/share/here" /your/local/mount/point/for/the/network/share/ -o # rw,file_mode=0117,dir_mode=0117,username=YourUserName,password=YourNetworkSharePassword
+# credentials=/LOCATION/OF/YOUR/SMB_CREDENTIALS_FILE,vers=3.0,rw,file_mode=0117,dir_mode=0117
+# if mount | grep /your/local/mount/point/for/backups > /dev/null; then
+#     echo -e "The remote file system has been successfully remounted.\n"
+# else
+#     echo "Remounting the remote file system has FAILED! The backup cannot proceed."
+#     exit 1
+# fi
+# ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function Start_Backup {
+    while true; do
+        read -t 30 -p "$* [y/n]: " yn
+        case $yn in
+            [Yy]*) return 0  ;;
+           ""|[Nn]*) echo -e "\nNo user input or $USER has declined to proceed with the backup!\nWe are done here.\n" ; exit 0 ;;
+        esac
+    done
+}
+Start_Backup "Are you ready to proceed with the backup?" &&
+echo -e "\nCreating backup file. Please see zip.log.txt for details of this operation.\n(This may take some time...)"
+YEAR=$(date +%Y)
+MONTH=$(date +%-m)
+DAY=$(date +%-d)
+HOUR=$(date +%-H)
+MINUTE=$(date +%-M)
+DATE="${MONTH}-${DAY}-${YEAR}_${HOUR}-${MINUTE}"
+FILE="/path/to/your/Minecraft/server/choose_your_backup_name_${DATE}.zip"
+echo "Creating the backup file: $FILE" | tee -a zip.log.txt
+zip -r "$FILE" /path/to/your/Minecraft/server/* >> zip.log.txt 2>&1
+if test -f "$FILE"; then
+    echo -e "\nThe backup file $FILE was successfully created on the remote file system.\n"
+else
+    echo -e "\nThere was an error creating the file $FILE!\nBACKUP FAILED!!\n"
+fi
+function Restart_Minecraft_Server {
+    while true; do
+        read -t 30 -p "$* [y/n]: " yn
+        case $yn in
+            [Yy]*) return 0  ;;
+            ""|[Nn]*) echo -e "\nNo input or $USER does not want to restart the Minecraft Server.\nWe are done here.\n"; exit 0  ;;
+        esac
+    done
+}
+Restart_Minecraft_Server "Do you want to restart the Minecraft Server?" && sudo service minecraft start
+if systemctl is-active --quiet minecraft; then
+    echo -e "The Minecraft Server has been successfully restarted.\nWe are done here.\n"
+    exit 0
+else
+    echo "Unable to restart the Minecraft Server! We have failed somewhere! :("
+    exit 1
+fi
+echo -e "\nWe are done here."
