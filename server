@@ -2,17 +2,28 @@
 # Minecraft Java Server Control Script v1.3 by mopar3502001
 # Last modified on 4/14/2025 for Minecraft Java 1.21.4, Paper Server Version 1.21.4-222-main@9b1798d (2025-03-27T13:35:40Z)
 #
-# This script assumes: You are using a paperMC server with bukkit. The server version makes no difference here, but will in the
-# service depending on your file naming convention. Although the script will run without paperMC and bukkit!
+# Please note that this is a work in progress, and updates may be a little slow at first.
+#
+# This script assumes: You are using a PaperMC server with bukkit. The server version makes no difference here, but will in the
+# service depending on your file naming convention. Although the script will run without PaperMC and bukkit! No addons or plugins
+# are required for this other than mcrcon or GNU screen if you plan on using one or both of them.
 #
 
 # /*-------------------------------------------------------------------------------
 # Note that option 1 no longer functions due to the script now using Rcon!
 # It will simply fail because it will not find a previous instance of GNU screen.
-# This script can be configured to use the screen as the local console if desired.
+# This script can be configured to use GNU screen as the local console if desired.
 # To see if you have screen installed use: "screen --version"
 # To install screen with apt use: "sudo apt install screen"
+#
+# Also note that the update is not functional at this time. I will code that in the
+# near future and commit it when I have time. This will likely be in the format of
+# entering/selecting the new MCServer.JAR and selecting where to place it, fully
+# automating the server update, as well as updating the MC service, SBU (server backup utility),
+# and whatever else will need to be addressed.
 # -------------------------------------------------------------------------------/*
+clear
+
 clear
 sleep 1
 
