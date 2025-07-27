@@ -1,4 +1,7 @@
 # mc_fw_mon
+
+(Download the .ZIP to get all files in one transaction)
+
 Minecraft Firewall Monitor
 For All Minecraft server versions (Tested on Ubuntu Server 24.04 Pro LTS)
 A lightweight Bash-based firewall and service monitoring system tailored for Minecraft Java Edition servers.
