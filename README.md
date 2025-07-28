@@ -134,19 +134,19 @@ Last Intrusion Attempt (Monthly):
  EXTDROP: 07/27/2025 10:41:21 from 156.146.63.150
 ==========================================
 
-==== Port 61669 Drops (Today) ====
-Dropped attempts on port 61669 today: 0
-Top 3 Offending IPs (Today on port 61669):
+==== Port 25565 Drops (Today) ====
+Dropped attempts on port 25565 today: 0
+Top 3 Offending IPs (Today on port 25565):
  No offenders detected.
-Last Intrusion Attempt (Today on port 61669):
+Last Intrusion Attempt (Today on port 25565):
  None recorded
 ========================================
 
-==== Port 61669 Drops (Monthly) ====
-Dropped attempts on port 61669 this month: 0
-Top 3 Offending IPs (Monthly on port 61669):
+==== Port 25565 Drops (Monthly) ====
+Dropped attempts on port 25565 this month: 0
+Top 3 Offending IPs (Monthly on port 25565):
  No offenders detected.
-Last Intrusion Attempt (Monthly on port 61669):
+Last Intrusion Attempt (Monthly on port 25565):
  None recorded
 ==========================================
 
