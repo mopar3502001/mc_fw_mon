@@ -110,6 +110,11 @@ sudo iptables-save > /etc/iptables/rules.v4
 Sample Output:
 
 ```text
+
+Note: EXTDROP are network packets sent from OUTSIDE of your LAN,
+and INTDROP are packets that are dropped ON your LAN. Multicast
+packets aren't dropped, they're just not logged to keep the summary clean.
+
 ==== Firewall Drop Summary (Today) ====
 Total dropped connection attempts today: 518
  - EXTDROP: 518
