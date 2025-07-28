@@ -17,16 +17,18 @@ Also as a requirement, a very easy way to create a backup of my MC server and st
 wanted to be able to view the MC server logs "live", and have either Rcon or server console access. Also what seemed
 necessary was a way to watch for bad actors trying to access my server to possibly destroy all the hard work that was put
 into creating these worlds. I wanted a quick summary of nefarious activity at login, and a way to view it on demand at any
-time after logging in. Thus, this package, in its state of infancy, was born. This will eventually be developed into a
-full-fledged Java MC server control package with all the bells and whistles, given enough time (fail2ban, packet/port flooding
-prevention, etc.) These scripts are what I created after not finding exactly what I was looking for. Hopefully someone gets
-some use out of them besides me. The interest of people in this project will dictate how much will be posted to this branch.
-So, if you are interested in seeing much more sophisticated scripts or binaries come from this, please be sure to let me know.
+time after logging in. Thus, this (future package) was born. This will eventually be developed into a full-fledged Java MC
+server control package with all the bells and whistles, given enough time (fail2ban, packet/port flooding prevention, etc.)
+These scripts are what I created after not finding exactly what I was looking for. Hopefully someone gets some use out of
+them besides me. The interest of people in this project will dictate how much will be posted to this branch. So, if you are
+interested in seeing much more sophisticated scripts or binaries come from this, please be sure to let me know.
 I would be excited to make a real project out of this!
-# This is a work in progress. This is just something I put together to control my MC Java server without having to put much
-effort into it. If enough people show interest I will put much more effort into making this into a real thing. Heck,
-I would even make it into a Debian distro or w/e people need to be able to run it. If nothing else and you know your
+
+This is a work in progress! This is just something I put together over a weekend to control my MC Java server without having
+to put much effort into it. If enough people show interest I will put much more effort into making this into a real thing.
+Heck, I would even make it into a Debian distro or w/e people need to be able to run it. If nothing else and you know your
 way around IPTables, Ubuntu services, etc., this is a decent starting point for something really nice.
+
 Let me know if you have any suggestions!
 
 ## Features
