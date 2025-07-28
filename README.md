@@ -31,7 +31,7 @@ way around IPTables, Ubuntu services, etc., this is a decent starting point for 
 
 Let me know if you have any suggestions!
 
-## Features
+# Features
 
 - Real-time firewall drop summary on login (via MOTD)
 - Daily and monthly summaries
@@ -45,7 +45,7 @@ Let me know if you have any suggestions!
   - Running backups
   - Viewing live/full logs
   
-## Requirements
+# Requirements
 
 - Ubuntu with `iptables` (not `ufw`)
 - `rsyslog` configured to capture kernel log entries to `/var/log/fwlog.log`
@@ -53,34 +53,36 @@ Let me know if you have any suggestions!
 - `systemd` service for Minecraft
 - Optional: `screen`, `mcrcon`
 
-## Warning
+# Warning
 
 > **This tool is for advanced users only.**
-> 
+> - Be careful! Altering your IPTABLES without understanding what you are doing is DANGEROUS.
 > - You must be familiar with managing `iptables` rules directly.
 > - You must know how to configure `rsyslog`.
 > - No support is provided for UFW-to-iptables migration or log forwarding.
 > - This repo is provided *as-is*, with no warranty or guarantee.
+> - I will try to respond to as many people as I can if there are questions.
+> - I will try to help with editing the code in the various scripts as much as possible.
 
-## Installation
+# Installation
 
-### 1. Clone the Repo
+# 1. Clone the Repo
 [bash]
 git clone https://github.com/YOURUSERNAME/minecraft-fwlog-monitor.git
 cd minecraft-fwlog-monitor
 
-### 2. Deploy the MOTD Script
+# 2. Deploy the MOTD Script
 [bash]
 sudo cp fwlog-summary.sh /etc/update-motd.d/99-fwlog-summary
 sudo chmod +x /etc/update-motd.d/99-fwlog-summary
 
-### 3. Deploy the Server Control Script
+# 3. Deploy the Server Control Script
 [bash]
 sudo cp mc-server-control.sh /usr/local/bin/server
 sudo chmod +x /usr/local/bin/server
 ```
 
-### 4. Set Up Log Forwarding (rsyslog)
+# 4. Set Up Log Forwarding (rsyslog)
 Create `/etc/rsyslog.d/fwlog.conf`:
 [rsyslog]
 :msg, contains, "EXTDROP" /var/log/fwlog.log
@@ -92,7 +94,7 @@ Then:
 [bash]
 sudo systemctl restart rsyslog
 
-### 5. Apply Your iptables Rules
+# 5. Apply Your iptables Rules
 Example:
 [bash]
 iptables -A INPUT -p tcp -s 10.0.0.0/24 --dport 25575 -j ACCEPT
@@ -105,7 +107,7 @@ Then:
 [bash]
 sudo iptables-save > /etc/iptables/rules.v4
 
-## Sample Output
+# Sample Output
 
 ==== Firewall Drop Summary (Today) ====
 Total dropped connection attempts today: 518
@@ -131,7 +133,7 @@ Last Intrusion Attempt (Monthly):
  EXTDROP: 07/27/2025 10:41:21 from <ATTACKER_IP_1>
 ==========================================
 
-### 2. Port-Specific Drop Summary (e.g., Minecraft Port)
+# 2. Port-Specific Drop Summary (e.g., Minecraft Port)
 
 ==== Port <CUSTOM_MC_PORT> Drops (Today) ====
 Dropped attempts on port <CUSTOM_MC_PORT> today: 0
@@ -149,10 +151,10 @@ Last Intrusion Attempt (Monthly on port <CUSTOM_MC_PORT>):
  None recorded
 ==========================================
 
-## License
+# License
 MIT (or specify otherwise)
 
 ---
 
-## Contributions
+# Contributions
 PRs welcome only for documentation or portability enhancements. No support for basic iptables or syslog questions.
