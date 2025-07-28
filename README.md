@@ -14,11 +14,11 @@ I looked around quite extensively for a MC Java server control script or program
 couldn't find what I was looking for. I wanted something that would easily allow me to edit the server properties file
 or the bukkit configuration file, would allow me to make changes to them, then apply them and easily restart the server.
 Also as a requirement, a very easy way to create a backup of my MC server and store it on a local network share. I also
-wanted to be able to view the MC server logs "live", and have either Rcon or server console access. Also what seemed
-necessary was a way to watch for bad actors trying to access my server to possibly destroy all the hard work that was put
-into creating these worlds. I wanted a quick summary of nefarious activity at login, and a way to view it on demand at any
-time after logging in. Thus, this (future package) was born. This will eventually be developed into a full-fledged Java MC
-server control package with all the bells and whistles, given enough time (fail2ban, packet/port flooding prevention, etc.)
+wanted to be able to view the MC server logs "live", and have either Rcon or server console access (GNU screen). Also what
+seemed necessary was a way to watch for bad actors trying to access my server to possibly destroy all the hard work that
+was put into creating these worlds. I wanted a quick summary of nefarious activity at login, and a way to view it on demand
+at any time after logging in. Thus, this (future package) was born. This will eventually be developed into a full-fledged
+Java MC server control package with all the bells and whistles, given enough time (fail2ban, packet/port flooding prevention, etc.)
 These scripts are what I created after not finding exactly what I was looking for. Hopefully someone gets some use out of
 them besides me. The interest of people in this project will dictate how much will be posted to this branch. So, if you are
 interested in seeing much more sophisticated scripts or binaries come from this, please be sure to let me know.
