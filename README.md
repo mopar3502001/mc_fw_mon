@@ -66,23 +66,23 @@ Let me know if you have any suggestions!
 
 # Installation
 
-# 1. Clone the Repo
+1. Clone the Repo
 [bash]
 git clone https://github.com/YOURUSERNAME/minecraft-fwlog-monitor.git
 cd minecraft-fwlog-monitor
 
-# 2. Deploy the MOTD Script
+2. Deploy the MOTD Script
 [bash]
 sudo cp fwlog-summary.sh /etc/update-motd.d/99-fwlog-summary
 sudo chmod +x /etc/update-motd.d/99-fwlog-summary
 
-# 3. Deploy the Server Control Script
+3. Deploy the Server Control Script
 [bash]
 sudo cp mc-server-control.sh /usr/local/bin/server
 sudo chmod +x /usr/local/bin/server
 ```
 
-# 4. Set Up Log Forwarding (rsyslog)
+4. Set Up Log Forwarding (rsyslog)
 Create `/etc/rsyslog.d/fwlog.conf`:
 [rsyslog]
 :msg, contains, "EXTDROP" /var/log/fwlog.log
@@ -94,7 +94,7 @@ Then:
 [bash]
 sudo systemctl restart rsyslog
 
-# 5. Apply Your iptables Rules
+5. Apply Your iptables Rules
 Example:
 [bash]
 iptables -A INPUT -p tcp -s 10.0.0.0/24 --dport 25575 -j ACCEPT
@@ -107,7 +107,7 @@ Then:
 [bash]
 sudo iptables-save > /etc/iptables/rules.v4
 
-# Sample Output
+Sample Output
 
 ==== Firewall Drop Summary (Today) ====
 Total dropped connection attempts today: 518
@@ -133,9 +133,9 @@ Last Intrusion Attempt (Monthly):
  EXTDROP: 07/27/2025 10:41:21 from <ATTACKER_IP_1>
 ==========================================
 
-# 2. Port-Specific Drop Summary (e.g., Minecraft Port)
+2. Port-Specific Drop Summary (e.g., Minecraft Port)
 
-==== Port <CUSTOM_MC_PORT> Drops (Today) ====
+**==== Port <CUSTOM_MC_PORT> Drops (Today) ====
 Dropped attempts on port <CUSTOM_MC_PORT> today: 0
 Top 3 Offending IPs (Today on port <CUSTOM_MC_PORT>):
  No offenders detected.
@@ -149,7 +149,7 @@ Top 3 Offending IPs (Monthly on port <CUSTOM_MC_PORT>):
  No offenders detected.
 Last Intrusion Attempt (Monthly on port <CUSTOM_MC_PORT>):
  None recorded
-==========================================
+**==========================================
 
 # License
 MIT (or specify otherwise)
