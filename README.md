@@ -10,24 +10,26 @@ A lightweight Bash-based firewall and service monitoring system tailored for Min
 **Version:** 1.3  
 **Tested on:** Ubuntu 24.04 Pro LTS
 
-# I looked around quite extensively for a MC Java server control script or program and I couldn't find exactly what I was
-# looking for. I wanted something that would easily allow me to edit the server properties file or the bukkit configuration
-# file, would allow me to make changes to them, then apply them and easily restart the server. Also as a requirement, a very
-# easy way to create a backup of my MC server and store it on a local network share. I also wanted to be able to view the MC
-# server logs "live", and have either Rcon or server console access. Also what seemed necessary was a way to watch for bad
-# actors trying to access my server to possibly destroy all the hard work that was put into creating these worlds. I wanted
-# a quick summary of nefarious activity at login, and a way to view it on demand at any time after logging in.
-# Thus, this package, in its most state of infancy, was born. This will eventually be developed into a full-fledged Java MC
-# server control package with all the bells and whistles, given enough time (fail2ban, packet/port flooding prevention, etc.)
-# These scripts are what I created after not finding exactly what I was looking for. Hopefully someone gets some use out of
-# them besides me. The interest of people in this project will dictate how much will be posted to this branch. So, if you are
-# interested in seeing much more sophisticated scripts or binaries come from this, please be sure to let me know. I would be
-# excited to make a real project out of this!
+# I looked around quite extensively for a MC Java server control script or program that did exactly what I wanted, and I
+# couldn't find what I was looking for. I wanted something that would easily allow me to edit the server properties file
+# or the bukkit configuration file, would allow me to make changes to them, then apply them and easily restart the server.
+# Also as a requirement, a very easy way to create a backup of my MC server and store it on a local network share. I also
+# wanted to be able to view the MC server logs "live", and have either Rcon or server console access. Also what seemed
+# necessary was a way to watch for bad actors trying to access my server to possibly destroy all the hard work that was put
+# into creating these worlds. I wanted a quick summary of nefarious activity at login, and a way to view it on demand at any
+# time after logging in. Thus, this package, in its most state of infancy, was born. This will eventually be developed into a
+# full-fledged Java MC server control package with all the bells and whistles, given enough time (fail2ban, packet/port flooding
+# prevention, etc.) These scripts are what I created after not finding exactly what I was looking for. Hopefully someone gets
+# some use out of them besides me. The interest of people in this project will dictate how much will be posted to this branch.
+# So, if you are interested in seeing much more sophisticated scripts or binaries come from this, please be sure to let me know.
+# I would be excited to make a real project out of this!
 #
 # This is a work in progress. This is just something I put together to control my MC Java server without having to put much
 # effort into it. If enough people show interest I will put much more effort into making this into a real thing. Heck,
-# I would even make it into a .DEB distro or w/e people need to be able to run it. If nothing else and you know your
+# I would even make it into a Debian distro or w/e people need to be able to run it. If nothing else and you know your
 # way around IPTables, Ubuntu services, etc., this is a decent starting point for something really nice.
+#
+# Let me know if you have any suggestions!
 
 ## Features
 
