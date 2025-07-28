@@ -64,7 +64,7 @@ Let me know if you have any suggestions!
 > - I will try to respond to as many people as I can if there are questions.
 > - I will try to help with editing the code in the various scripts as much as possible.
 
-# Installation
+Installation
 
 1. Clone the Repo
 [bash]
@@ -135,7 +135,7 @@ Last Intrusion Attempt (Monthly):
 
 2. Port-Specific Drop Summary (e.g., Minecraft Port)
 
-**==== Port <CUSTOM_MC_PORT> Drops (Today) ====
+==== Port <CUSTOM_MC_PORT> Drops (Today) ====
 Dropped attempts on port <CUSTOM_MC_PORT> today: 0
 Top 3 Offending IPs (Today on port <CUSTOM_MC_PORT>):
  No offenders detected.
@@ -151,10 +151,10 @@ Last Intrusion Attempt (Monthly on port <CUSTOM_MC_PORT>):
  None recorded
 **==========================================
 
-# License
+License
 MIT (or specify otherwise)
 
 ---
 
-# Contributions
+Contributions
 PRs welcome only for documentation or portability enhancements. No support for basic iptables or syslog questions.
