@@ -109,6 +109,7 @@ sudo iptables-save > /etc/iptables/rules.v4
 
 Sample Output:
 
+```text
 ==== Firewall Drop Summary (Today) ====
 Total dropped connection attempts today: 518
  - EXTDROP: 518
