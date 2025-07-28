@@ -2,7 +2,7 @@
 
 (Download the .ZIP to get all files in one transaction)
 
-Minecraft Firewall Monitor
+Minecraft Firewall Monitor, Server Control and Backup Scripts
 For All Minecraft server versions (Tested on Ubuntu Server 24.04 Pro LTS)
 A lightweight Bash-based firewall and service monitoring system tailored for Minecraft Java Edition servers.
 
