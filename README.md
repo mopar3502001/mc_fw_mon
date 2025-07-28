@@ -107,18 +107,18 @@ Then:
 [bash]
 sudo iptables-save > /etc/iptables/rules.v4
 
-Sample Output
+Sample Output:
 
 ==== Firewall Drop Summary (Today) ====
 Total dropped connection attempts today: 518
  - EXTDROP: 518
  - INTDROP: 0
 Top 3 Offending IPs (Today):
- <ATTACKER_IP_1> (222)
- <ATTACKER_IP_2> (192)
- <ATTACKER_IP_3> (48)
+ 156.146.63.150 (222)
+ 176.65.148.220 (192)
+ 176.65.148.4 (48)
 Last Intrusion Attempt (Today):
- EXTDROP: 07/27/2025 10:41:21 from <ATTACKER_IP_1>
+ EXTDROP: 07/27/2025 10:41:21 from 156.146.63.150
 ========================================
 
 ==== Firewall Drop Summary (Monthly) ====
@@ -126,30 +126,28 @@ Total dropped connection attempts this month: 1066
  - EXTDROP: 1066
  - INTDROP: 0
 Top 3 Offending IPs (Monthly):
- <ATTACKER_IP_2> (474)
- <ATTACKER_IP_1> (344)
- <ATTACKER_IP_3> (120)
+ 176.65.148.220 (474)
+ 156.146.63.150 (344)
+ 176.65.148.4 (120)
 Last Intrusion Attempt (Monthly):
- EXTDROP: 07/27/2025 10:41:21 from <ATTACKER_IP_1>
+ EXTDROP: 07/27/2025 10:41:21 from 156.146.63.150
 ==========================================
 
-2. Port-Specific Drop Summary (e.g., Minecraft Port)
-
-==== Port <CUSTOM_MC_PORT> Drops (Today) ====
-Dropped attempts on port <CUSTOM_MC_PORT> today: 0
-Top 3 Offending IPs (Today on port <CUSTOM_MC_PORT>):
+==== Port 61669 Drops (Today) ====
+Dropped attempts on port 61669 today: 0
+Top 3 Offending IPs (Today on port 61669):
  No offenders detected.
-Last Intrusion Attempt (Today on port <CUSTOM_MC_PORT>):
+Last Intrusion Attempt (Today on port 61669):
  None recorded
 ========================================
 
-==== Port <CUSTOM_MC_PORT> Drops (Monthly) ====
-Dropped attempts on port <CUSTOM_MC_PORT> this month: 0
-Top 3 Offending IPs (Monthly on port <CUSTOM_MC_PORT>):
+==== Port 61669 Drops (Monthly) ====
+Dropped attempts on port 61669 this month: 0
+Top 3 Offending IPs (Monthly on port 61669):
  No offenders detected.
-Last Intrusion Attempt (Monthly on port <CUSTOM_MC_PORT>):
+Last Intrusion Attempt (Monthly on port 61669):
  None recorded
-**==========================================
+==========================================
 
 License
 MIT (or specify otherwise)
