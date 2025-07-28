@@ -17,7 +17,7 @@ A lightweight Bash-based firewall and service monitoring system tailored for Min
 # wanted to be able to view the MC server logs "live", and have either Rcon or server console access. Also what seemed
 # necessary was a way to watch for bad actors trying to access my server to possibly destroy all the hard work that was put
 # into creating these worlds. I wanted a quick summary of nefarious activity at login, and a way to view it on demand at any
-# time after logging in. Thus, this package, in its most state of infancy, was born. This will eventually be developed into a
+# time after logging in. Thus, this package, in its state of infancy, was born. This will eventually be developed into a
 # full-fledged Java MC server control package with all the bells and whistles, given enough time (fail2ban, packet/port flooding
 # prevention, etc.) These scripts are what I created after not finding exactly what I was looking for. Hopefully someone gets
 # some use out of them besides me. The interest of people in this project will dictate how much will be posted to this branch.
